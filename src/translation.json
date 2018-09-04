@@ -6,5 +6,13 @@
     "cancel": "Cancel",
     "register": "Register",
     "save": "Save"
+  },
+  "forum": {
+    "write": "쓰기",
+    "no": "번호",
+    "by": "에 의해",
+    "started": "에 작성",
+    "views": "조회",
+    "comments": "댓글"
   }
 }

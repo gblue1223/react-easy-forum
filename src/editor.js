@@ -1,4 +1,5 @@
-const React = require('react')
+import React from 'react'
+import lucidfish from './translation'
 
 // React Draft Wysiwyg
 import { EditorState, ContentState, convertFromHTML } from 'draft-js'
@@ -11,8 +12,6 @@ const initialEditorContent = ContentState.createFromBlockArray(
   blocksFromHTML.contentBlocks,
   blocksFromHTML.entityMap
 )
-
-const lucidfish = require('./src/translation')
 
 export default class Editor extends React.PureComponent {
   state = {
