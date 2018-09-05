@@ -9,26 +9,7 @@ export default class EasyForum extends React.PureComponent {
       theme: {
         writingIcon: <em className="fa fa-edit fa-fw" />,
       },
-      data: [
-        { idx: 1,
-          title: 'title1',
-          writer: 'alice',
-          date: new Date(),
-          views: 1,
-          comments: 1 },
-        { idx: 2,
-          title: 'title2',
-          writer: 'whiteRabbit',
-          date: new Date(),
-          views: 1,
-          comments: 1 },
-        { idx: 3,
-          title: 'title3',
-          writer: 'eggBrother',
-          date: new Date(),
-          views: 1,
-          comments: 1 },
-      ],
+      data: [],
     }
   }
 
