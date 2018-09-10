@@ -4,7 +4,7 @@ import lucidfish from './translation'
 export default class Topics extends React.PureComponent {
   renderItem ({ idx, title, writer, date, views, comments }) {
     return (
-      <tr>
+      <tr key={idx}>
         <td>
           <h4>{idx}</h4>
         </td>

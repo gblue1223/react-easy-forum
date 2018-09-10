@@ -2,35 +2,42 @@ import React from 'react'
 import lucidfish from './translation'
 
 // React Draft Wysiwyg
-import { EditorState, ContentState, convertFromHTML } from 'draft-js'
+import { EditorState, ContentState, convertToRaw, convertFromHTML } from 'draft-js'
 import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
+import draftToHtml from 'draftjs-to-html'
 
-// Editor's initial content
-const blocksFromHTML = convertFromHTML('<p>Write something...</p>')
-const initialEditorContent = ContentState.createFromBlockArray(
-  blocksFromHTML.contentBlocks,
-  blocksFromHTML.entityMap
-)
-
-export default class Editor extends React.PureComponent {
-  state = {
-    editorState: EditorState.createWithContent(initialEditorContent)
+export default class EditorView extends React.PureComponent {
+  onEditorStateChange (editorState) {
+    this.setState({ editorState })
+    this.contents = draftToHtml(convertToRaw(editorState.getCurrentContent()))
   }
 
-  onEditorStateChange = editorState => {
-    this.setState({ editorState })
+  constructor () {
+    super()
+    this.state = {
+      editorState: EditorState.createEmpty()
+    }
   }
 
   render () {
+    const {
+      onCancel,
+      onSave,
+    } = this.props
+
+    const handleSubmit = () => {
+      onSave(this.titleRef.value, this.contents)
+    }
     return (
       <div>
         <div className="row justify-content-md-center">
           <div className="col col-sm-12">
-            <form action="">
+            <form onSubmit={handleSubmit}>
               <input
+                ref={r => { this.titleRef = r }}
                 type="text"
-                name="article-title"
+                name="title"
                 placeholder="Article title..."
                 className="mb-3 form-control form-control-lg"
               />
@@ -39,18 +46,19 @@ export default class Editor extends React.PureComponent {
                 wrapperClassName="wysiwig-editor-wrapper"
                 editorClassName="form-control"
                 editorStyle={{ height: 300 }}
-                onEditorStateChange={this.onEditorStateChange}
+                onEditorStateChange={this.onEditorStateChange.bind(this)}
+                onContentStateChange={this.onContentStateChange.bind(this)}
               />
               <br/>
               <div className="clearfix">
                 <div className="pull-left">
-                  <button type="button" className="btn btn-danger">
-                    <em className="fa fa-trash fa-fw" />
-                    {lucidfish.common.delete}
-                  </button>
                 </div>
                 <div className="pull-right">
-                  <button type="button" className="btn btn-primary m-t-10">
+                  <button type="button" className="btn btn-secondary" onClick={onCancel}>
+                    <em className="fa fa-close fa-fw" />
+                    {lucidfish.common.cancel}
+                  </button>
+                  <button type="submit" className="btn btn-primary m-t-10">
                     <em className="fa fa-check fa-fw" />
                     {lucidfish.common.save}
                   </button>

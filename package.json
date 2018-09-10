@@ -25,7 +25,9 @@
     "url": "https://github.com/gblue1223/react-easy-forum/issues"
   },
   "homepage": "https://github.com/gblue1223/react-easy-forum#readme",
-  "dependencies": {},
+  "dependencies": {
+    "draftjs-to-html": "^0.8.4"
+  },
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
