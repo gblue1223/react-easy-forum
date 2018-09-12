@@ -6,9 +6,29 @@ import Topics from './topics'
 
 export default class EasyForum extends React.PureComponent {
   cancelWriting () {
+    const {
+      onCancel,
+    } = this.props
+
     this.setState({
       editorVisibility: false,
     })
+    if (onCancel) {
+      onCancel()
+    }
+  }
+
+  handleWriting (title, contents) {
+    const {
+      onWrite,
+    } = this.props
+
+    this.setState({
+      editorVisibility: false,
+    })
+    if (onWrite) {
+      onWrite(title, contents)
+    }
   }
 
   toggleEditor () {
@@ -52,7 +72,7 @@ export default class EasyForum extends React.PureComponent {
         <div className="col col-sm-12">
           {editorVisibility && <Editor
             onCancel={this.cancelWriting.bind(this)}
-            onSave={this.cancelWriting.bind(this)} />}
+            onWrite={this.handleWriting.bind(this)} />}
           <div className="text-right">
             {!editorVisibility && this.renderWritingButton()}
           </div>

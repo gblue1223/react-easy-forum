@@ -23,11 +23,13 @@ export default class EditorView extends React.PureComponent {
   render () {
     const {
       onCancel,
-      onSave,
+      onWrite,
     } = this.props
 
     const handleSubmit = () => {
-      onSave(this.titleRef.value, this.contents)
+      if (onWrite) {
+        onWrite(this.titleRef.value, this.contents)
+      }
     }
     return (
       <div>
@@ -47,7 +49,6 @@ export default class EditorView extends React.PureComponent {
                 editorClassName="form-control"
                 editorStyle={{ height: 300 }}
                 onEditorStateChange={this.onEditorStateChange.bind(this)}
-                onContentStateChange={this.onContentStateChange.bind(this)}
               />
               <br/>
               <div className="clearfix">
