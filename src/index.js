@@ -2,38 +2,59 @@ import React from 'react'
 import lucidfish from './translation'
 
 import Editor from './editor'
+import Reader from './reader'
 import Topics from './topics'
 
 export default class EasyForum extends React.PureComponent {
-  cancelWriting () {
-    const {
-      onCancel,
-    } = this.props
-
+  toggleEditor () {
     this.setState({
-      editorVisibility: false,
+      editorVisible: !this.state.editorVisible,
     })
-    if (onCancel) {
-      onCancel()
-    }
   }
 
-  handleWriting (title, contents) {
+  closeEditor (title, contents) {
     const {
       onWrite,
     } = this.props
 
     this.setState({
-      editorVisibility: false,
+      editorVisible: false,
     })
     if (onWrite) {
       onWrite(title, contents)
     }
   }
 
-  toggleEditor () {
+  cancelWriting () {
+    const {
+      onCancel,
+    } = this.props
+
     this.setState({
-      editorVisibility: !this.state.editorVisibility,
+      editorVisible: false,
+    })
+    if (onCancel) {
+      onCancel()
+    }
+  }
+
+  read (idx) {
+    const {
+      onRead,
+    } = this.props
+
+    this.setState({
+      readerVisible: true,
+      editorVisible: false,
+    })
+    if (onRead) {
+      onRead(idx)
+    }
+  }
+
+  closeReader () {
+    this.setState({
+      readerVisible: !this.state.readerVisible,
     })
   }
 
@@ -59,26 +80,29 @@ export default class EasyForum extends React.PureComponent {
   constructor () {
     super()
     this.state = {
-      editorVisibility: false,
+      editorVisible: false,
     }
   }
 
   render () {
-    const {
-      editorVisibility,
-    } = this.state
+    const { readTopic } = this.props
+    const { readerVisible, editorVisible } = this.state
     return (
       <div className="row justify-content-md-center">
         <div className="col col-sm-12">
-          {editorVisibility && <Editor
+          {editorVisible && !readerVisible && <Editor
             onCancel={this.cancelWriting.bind(this)}
-            onWrite={this.handleWriting.bind(this)} />}
+            onWritten={this.closeEditor.bind(this)} />}
+          {readerVisible && !editorVisible && <Reader
+            title={readTopic.title}
+            contents={readTopic.contents}
+            onClose={this.closeReader.bind(this)} />}
           <div className="text-right">
-            {!editorVisibility && this.renderWritingButton()}
+            {!editorVisible && this.renderWritingButton()}
           </div>
-          <Topics {...this.props} />
+          <Topics {...this.props} onRead={this.read.bind(this)} />
           <div className="text-right">
-            {!editorVisibility && this.renderWritingButton()}
+            {!editorVisible && this.renderWritingButton()}
           </div>
         </div>
       </div>

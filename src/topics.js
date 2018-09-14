@@ -2,13 +2,14 @@ import React from 'react'
 import lucidfish from './translation'
 
 export default class Topics extends React.PureComponent {
-  renderItem ({ idx, title, writer, date, views, comments }) {
+  renderItem ({ idx, title, writer_id, writing_time, views, comments }) {
+    const { onRead } = this.props
     return (
       <tr key={idx}>
         <td>
           <h4>{idx}</h4>
         </td>
-        <td>
+        <td style={{cursor:'pointer'}} onClick={onRead.bind(this, idx)}>
           <h4>
             <strong>{title}</strong>
           </h4>
@@ -27,11 +28,11 @@ export default class Topics extends React.PureComponent {
         <td className="text-right d-none d-lg-table-cell">
           <div className="text-muted">
             <small className="mr-1">
-              <strong>{writer}</strong>
+              <strong>{writer_id}</strong>
               {' '}{lucidfish.forum.by}
             </small>
             <small>
-              <strong>{new Date(date).toLocaleString()}</strong>
+              <strong>{new Date(writing_time).toLocaleString()}</strong>
               {' '}{lucidfish.forum.started}
             </small>
           </div>
@@ -41,7 +42,7 @@ export default class Topics extends React.PureComponent {
   }
 
   render () {
-    const { data } = this.props
+    const { topics } = this.props
     return (
       <table className="table table-striped">
         <thead>
@@ -50,7 +51,7 @@ export default class Topics extends React.PureComponent {
           </tr>
         </thead>
         <tbody>
-          {data.map(item => this.renderItem(item))}
+          {topics.map(item => this.renderItem(item))}
         </tbody>
       </table>
     )

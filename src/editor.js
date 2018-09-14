@@ -23,12 +23,12 @@ export default class EditorView extends React.PureComponent {
   render () {
     const {
       onCancel,
-      onWrite,
+      onWritten,
     } = this.props
 
     const handleSubmit = () => {
-      if (onWrite) {
-        onWrite(this.titleRef.value, this.contents)
+      if (onWritten) {
+        onWritten(this.titleRef.value, this.contents)
       }
     }
     return (
