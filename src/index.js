@@ -73,7 +73,10 @@ export default class EasyForum extends React.PureComponent {
       theme: {
         writingIcon: <em className="fa fa-edit fa-fw" />,
       },
-      data: [],
+      topics: [],
+      readTopic: {
+        title: '', contents: '', comments: [],
+      },
     }
   }
 
@@ -96,6 +99,7 @@ export default class EasyForum extends React.PureComponent {
           {readerVisible && !editorVisible && <Reader
             title={readTopic.title}
             contents={readTopic.contents}
+            comments={readTopic.comments}
             onClose={this.closeReader.bind(this)} />}
           <div className="text-right">
             {!editorVisible && this.renderWritingButton()}

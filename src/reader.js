@@ -2,13 +2,28 @@ import React from 'react'
 import lucidfish from './translation'
 
 export default class ReaderView extends React.PureComponent {
+  renderComments () {
+    const {
+      comments,
+    } = this.props
+    return (
+      <ul>
+        {comments && comments.map((comment, i) => (
+          <li key={i}>
+            <strong>{comment.writer_id}</strong>
+            <p>{comment.contents}</p>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
   render () {
     const {
       title,
       contents,
       onClose,
     } = this.props
-
     return (
       <div>
         <div className="row justify-content-md-center">
@@ -34,6 +49,11 @@ export default class ReaderView extends React.PureComponent {
                 </div>
               </div>
               <div className="card-footer">
+                <div className="row">
+                  <div className="col-12">
+                    {this.renderComments()}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

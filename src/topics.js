@@ -2,7 +2,7 @@ import React from 'react'
 import lucidfish from './translation'
 
 export default class Topics extends React.PureComponent {
-  renderItem ({ idx, title, writer_id, writing_time, views, comments }) {
+  renderTopic ({ idx, title, writer_id, writing_time, views, comments }) {
     const { onRead } = this.props
     return (
       <tr key={idx}>
@@ -51,7 +51,7 @@ export default class Topics extends React.PureComponent {
           </tr>
         </thead>
         <tbody>
-          {topics.map(item => this.renderItem(item))}
+          {topics.map(topic => this.renderTopic(topic))}
         </tbody>
       </table>
     )
