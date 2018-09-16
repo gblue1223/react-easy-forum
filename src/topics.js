@@ -21,7 +21,7 @@ export default class Topics extends React.PureComponent {
             <span className="mx-1" />
             <span>
               <strong className="mr-1">{comments}</strong>
-              {lucidfish.forum.comments}
+              {lucidfish.forum.comment}
             </span>
           </div>
         </td>

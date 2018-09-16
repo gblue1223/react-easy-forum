@@ -6,13 +6,14 @@ import Reader from './reader'
 import Topics from './topics'
 
 export default class EasyForum extends React.PureComponent {
-  toggleEditor () {
+  openEditor () {
     this.setState({
-      editorVisible: !this.state.editorVisible,
+      readerVisible: false,
+      editorVisible: true,
     })
   }
 
-  closeEditor (title, contents) {
+  writeTopic (title, contents) {
     const {
       onWrite,
     } = this.props
@@ -38,6 +39,16 @@ export default class EasyForum extends React.PureComponent {
     }
   }
 
+  writeComment (topic_idx, contents) {
+    const {
+      onComment,
+    } = this.props
+
+    if (onComment) {
+      onComment(topic_idx, contents)
+    }
+  }
+
   read (idx) {
     const {
       onRead,
@@ -54,14 +65,14 @@ export default class EasyForum extends React.PureComponent {
 
   closeReader () {
     this.setState({
-      readerVisible: !this.state.readerVisible,
+      readerVisible: false,
     })
   }
 
   renderWritingButton () {
     const { writingIcon } = this.props.theme
     return (
-      <button className="btn btn-primary m-1" onClick={this.toggleEditor.bind(this)}>
+      <button className="btn btn-primary m-1" onClick={this.openEditor.bind(this)}>
         {writingIcon}
         {lucidfish.forum.write}
       </button>
@@ -95,11 +106,13 @@ export default class EasyForum extends React.PureComponent {
         <div className="col col-sm-12">
           {editorVisible && !readerVisible && <Editor
             onCancel={this.cancelWriting.bind(this)}
-            onWritten={this.closeEditor.bind(this)} />}
+            onWrite={this.writeTopic.bind(this)} />}
           {readerVisible && !editorVisible && <Reader
+            idx={readTopic.idx}
             title={readTopic.title}
             contents={readTopic.contents}
             comments={readTopic.comments}
+            onComment={this.writeComment.bind(this)}
             onClose={this.closeReader.bind(this)} />}
           <div className="text-right">
             {!editorVisible && this.renderWritingButton()}

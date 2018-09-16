@@ -2,24 +2,46 @@ import React from 'react'
 import lucidfish from './translation'
 
 export default class ReaderView extends React.PureComponent {
-  renderComments () {
+  renderComments (idx) {
     const {
       comments,
+      onComment,
     } = this.props
+
+    const handleSubmit = e => {
+      e.preventDefault()
+      if (onComment) {
+        onComment(idx, this.contentsRef.value)
+      }
+      this.contentsRef.value = ''
+    }
     return (
-      <ul>
-        {comments && comments.map((comment, i) => (
-          <li key={i}>
-            <strong>{comment.writer_id}</strong>
-            <p>{comment.contents}</p>
-          </li>
-        ))}
-      </ul>
+      <div>
+        <ol className="list-group">
+          {comments && comments.map((comment, i) => (
+            <li key={i} className="list-group-item">
+              <strong>{comment.writer_id}</strong>
+              <span className="ml-2">{comment.contents}</span>
+            </li>
+          ))}
+        </ol>
+        <form onSubmit={handleSubmit}>
+          <div className="input-group">
+            <textarea ref={r => { this.contentsRef = r }} className="form-control" aria-label="With textarea" />
+            <div className="input-group-append">
+              <button type="submit" className="btn btn-outline-secondary">
+                {lucidfish.forum.comment}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
     )
   }
 
   render () {
     const {
+      idx,
       title,
       contents,
       onClose,
@@ -32,7 +54,7 @@ export default class ReaderView extends React.PureComponent {
               <div className="card-header">
                 <div className="row">
                   <div className="col-sm-11">
-                    <h2>{title}</h2>
+                    <h2>{`${idx} ${title}`}</h2>
                   </div>
                   <div className="col-sm-1 pull-right">
                     <button type="button" className="btn btn-default" onClick={onClose}>
@@ -51,7 +73,7 @@ export default class ReaderView extends React.PureComponent {
               <div className="card-footer">
                 <div className="row">
                   <div className="col-12">
-                    {this.renderComments()}
+                    {this.renderComments(idx)}
                   </div>
                 </div>
               </div>
