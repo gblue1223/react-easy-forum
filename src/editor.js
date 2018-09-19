@@ -2,20 +2,22 @@ import React from 'react'
 import lucidfish from './translation'
 
 // React Draft Wysiwyg
-import { EditorState, ContentState, convertToRaw, convertFromHTML } from 'draft-js'
-import { Editor } from 'react-draft-wysiwyg'
+import { Editor, EditorState, convertToRaw } from 'draft-js'
+import { Editor as Wysiwyg } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import draftToHtml from 'draftjs-to-html'
 
 export default class EditorView extends React.PureComponent {
-  onEditorStateChange (editorState) {
+  changeState (editorState) {
     this.setState({ editorState })
     this.contents = draftToHtml(convertToRaw(editorState.getCurrentContent()))
   }
 
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
     this.state = {
+      title: props.title,
+      contents: props.contents,
       editorState: EditorState.createEmpty()
     }
   }
@@ -26,11 +28,23 @@ export default class EditorView extends React.PureComponent {
       onWrite,
     } = this.props
 
+    const {
+      title,
+      contents,
+    } = this.state
+
     const handleSubmit = e => {
       e.preventDefault()
       if (onWrite) {
-        onWrite(this.titleRef.value, this.contents)
+        onWrite(title, contents)
       }
+    }
+
+    const handleInputChange = e => {
+      const target = e.target
+      const value = target.type === 'checkbox' ? target.checked : target.value
+      const name = target.name
+      this.setState({ [name]: value })
     }
     return (
       <div>
@@ -38,19 +52,32 @@ export default class EditorView extends React.PureComponent {
           <div className="col col-sm-12">
             <form onSubmit={handleSubmit}>
               <input
-                ref={r => { this.titleRef = r }}
                 type="text"
                 name="title"
-                placeholder="Article title..."
                 className="mb-3 form-control form-control-lg"
+                placeholder={lucidfish.forum.titlePlaceholder}
+                value={title}
+                onChange={handleInputChange}
               />
-              <Editor
-                editorState={this.state.editorState}
-                wrapperClassName="wysiwig-editor-wrapper"
-                editorClassName="form-control"
-                editorStyle={{ height: 300 }}
-                onEditorStateChange={this.onEditorStateChange.bind(this)}
+              <textarea
+                name="contents"
+                className="form-control"
+                style={{ height: 300 }}
+                placeholder={lucidfish.forum.contentsPlaceholder}
+                value={contents}
+                onChange={handleInputChange}
               />
+              {/*<Editor*/}
+                {/*editorState={this.state.editorState}*/}
+                {/*onChange={this.changeState.bind(this)}*/}
+              {/*/>*/}
+              {/*<Wysiwyg*/}
+                {/*editorState={this.state.editorState}*/}
+                {/*wrapperClassName="wysiwig-editor-wrapper"*/}
+                {/*editorClassName="form-control"*/}
+                {/*editorStyle={{ height: 300 }}*/}
+                {/*onEditorStateChange={this.changeState.bind(this)}*/}
+              {/*/>*/}
               <br/>
               <div className="clearfix">
                 <div className="pull-left">

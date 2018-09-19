@@ -21,7 +21,9 @@ export default class ReaderView extends React.PureComponent {
           {comments && comments.map((comment, i) => (
             <li key={i} className="list-group-item">
               <strong>{comment.writer_id}</strong>
-              <span className="ml-2">{comment.contents}</span>
+              <span className="ml-2">
+                <pre>{comment.contents}</pre>
+              </span>
             </li>
           ))}
         </ol>
@@ -45,6 +47,8 @@ export default class ReaderView extends React.PureComponent {
       title,
       contents,
       onClose,
+      onDelete,
+      onModify,
     } = this.props
     return (
       <div>
@@ -66,11 +70,30 @@ export default class ReaderView extends React.PureComponent {
               <div className="card-body">
                 <div className="row">
                   <div className="col-12 m-1" style={{ minHeight: '200px' }}>
-                    {contents}
+                    {/*{contents && <div dangerouslySetInnerHTML={{ __html: contents }}/>}*/}
+                    <pre>{contents}</pre>
                   </div>
                 </div>
               </div>
               <div className="card-footer">
+                <div className="row">
+                  <div className="col-12">
+                    <div className="clearfix mb-2">
+                      <div className="pull-left">
+                      </div>
+                      <div className="pull-right">
+                        <button type="button" className="btn btn-danger" onClick={onDelete}>
+                          <em className="fa fa-trash fa-fw" />
+                          {lucidfish.common.delete}
+                        </button>
+                        <button type="button" className="btn btn-primary m-t-10" onClick={onModify}>
+                          <em className="fa fa-check-square-o fa-fw" />
+                          {lucidfish.forum.modify}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <div className="row">
                   <div className="col-12">
                     {this.renderComments(idx)}

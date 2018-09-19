@@ -10,12 +10,15 @@
     "notice": "알림"
   },
   "forum": {
-    "close": "닫기",
-    "write": "쓰기",
+    "titlePlaceholder": "제목",
+    "contentsPlaceholder": "내용",
     "no": "번호",
     "by": "에 의해",
     "started": "에 작성",
     "views": "조회",
-    "comment": "댓글"
+    "comment": "댓글",
+    "close": "닫기",
+    "write": "쓰기",
+    "modify": "수정"
   }
 }

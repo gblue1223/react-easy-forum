@@ -26,15 +26,15 @@
   },
   "homepage": "https://github.com/gblue1223/react-easy-forum#readme",
   "dependencies": {
-    "draftjs-to-html": "^0.8.4"
+    "draft-js": "^0.10.5",
+    "draftjs-to-html": "^0.8.4",
+    "react": "^16.5.1",
+    "react-dom": "^16.5.1",
+    "react-draft-wysiwyg": "^1.12.13"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
-    "draft-js": "^0.10.5",
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
-    "react-draft-wysiwyg": "^1.12.13"
+    "babel-preset-react": "^6.24.1"
   }
 }
