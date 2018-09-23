@@ -16,8 +16,8 @@ export default class EditorView extends React.PureComponent {
   constructor (props) {
     super(props)
     this.state = {
-      title: props.title,
-      contents: props.contents,
+      title: props.title || '',
+      contents: props.contents || '',
       editorState: EditorState.createEmpty()
     }
   }
