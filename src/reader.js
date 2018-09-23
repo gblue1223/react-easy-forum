@@ -2,34 +2,153 @@ import React from 'react'
 import lucidfish from './translation'
 
 export default class ReaderView extends React.PureComponent {
-  renderComments (idx) {
+  handleInputChange (e) {
+    const target = e.target
+    const value = target.type === 'checkbox' ? target.checked : target.value
+    const name = target.name
+    this.setState({ [name]: value })
+  }
+
+  openCommentModifier (wllBeModifiedIdx, modifiedContents) {
+    this.setState({
+      wllBeModifiedIdx,
+      modifiedContents,
+    })
+  }
+
+  closeCommentModifier () {
+    this.setState({
+      wllBeModifiedIdx: 0,
+    })
+  }
+
+  renderComment (topic_idx, comment) {
     const {
-      comments,
-      onComment,
+      onDeleteComment,
+      onModifyComment,
     } = this.props
 
-    const handleSubmit = e => {
-      e.preventDefault()
-      if (onComment) {
-        onComment(idx, this.contentsRef.value)
-      }
-      this.contentsRef.value = ''
+    const {
+      wllBeModifiedIdx,
+      modifiedContents,
+    } = this.state
+
+    const visibleModifier = wllBeModifiedIdx === comment.idx
+
+    const cancel = () => {
+      this.closeCommentModifier()
     }
+
+    const modify = () => {
+      if (onModifyComment) {
+        onModifyComment(wllBeModifiedIdx, modifiedContents)
+        this.setState({
+          contents: modifiedContents,
+        })
+      }
+      this.closeCommentModifier()
+    }
+
+    const del = () => {
+      if (onDeleteComment) {
+        onDeleteComment(topic_idx, comment.idx)
+      }
+      this.closeCommentModifier()
+    }
+
+    return (
+      <li key={comment.idx} className="list-group-item">
+        <div className="row">
+          <div className="col-sm-2">
+            <strong>{comment.writer_id}</strong>
+          </div>
+          <div className={visibleModifier ? 'col-sm-10' : 'col-sm-8'}>
+            {
+              !visibleModifier
+                ? <pre>{comment.contents}</pre>
+                : <div className="input-group">
+                    <textarea
+                      className="form-control"
+                      aria-label="With textarea"
+                      name="modifiedContents"
+                      value={modifiedContents}
+                      onChange={this.handleInputChange.bind(this)}
+                    />
+                  <div className="input-group-append">
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-outline-secondary"
+                      onClick={cancel}
+                    >
+                      {lucidfish.common.cancel}
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-outline-primary"
+                      onClick={modify}
+                    >
+                      {lucidfish.common.save}
+                    </button>
+                  </div>
+                </div>
+            }
+          </div>
+          {
+            visibleModifier
+              ? null
+              : <div className="col-sm-2 text-right">
+                <button
+                  type="button"
+                  className="btn btn-sm btn-danger"
+                  onClick={del}
+                >
+                  <em className="fa fa-trash fa-fw" />
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-sm btn-primary m-t-10"
+                  onClick={this.openCommentModifier.bind(this, comment.idx, comment.contents)}
+                >
+                  <em className="fa fa-check-square-o fa-fw" />
+                </button>
+              </div>
+          }
+        </div>
+      </li>
+    )
+  }
+
+  renderComments (topic_idx) {
+    const {
+      comments,
+      onWriteComment,
+    } = this.props
+
+    const {
+      contents,
+    } = this.state
+
+    const write = e => {
+      e.preventDefault()
+      if (onWriteComment) {
+        onWriteComment(topic_idx, contents)
+      }
+    }
+
     return (
       <div>
         <ol className="list-group">
-          {comments && comments.map((comment, i) => (
-            <li key={i} className="list-group-item">
-              <strong>{comment.writer_id}</strong>
-              <span className="ml-2">
-                <pre>{comment.contents}</pre>
-              </span>
-            </li>
-          ))}
+          {comments && comments.map(comment => this.renderComment(topic_idx, comment))}
         </ol>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={write}>
           <div className="input-group">
-            <textarea ref={r => { this.contentsRef = r }} className="form-control" aria-label="With textarea" />
+            <textarea
+              className="form-control"
+              aria-label="With textarea"
+              name="contents"
+              value={contents}
+              onChange={this.handleInputChange.bind(this)}
+            />
             <div className="input-group-append">
               <button type="submit" className="btn btn-outline-secondary">
                 {lucidfish.forum.comment}
@@ -41,14 +160,21 @@ export default class ReaderView extends React.PureComponent {
     )
   }
 
+  constructor (props) {
+    super(props)
+    this.state = {
+      visibleModifier: false,
+    }
+  }
+
   render () {
     const {
       idx,
       title,
       contents,
-      onClose,
-      onDelete,
-      onModify,
+      onCloseTopic,
+      onDeleteTopic,
+      onModifyTopic,
     } = this.props
     return (
       <div>
@@ -61,7 +187,7 @@ export default class ReaderView extends React.PureComponent {
                     <h2>{`${idx} ${title}`}</h2>
                   </div>
                   <div className="col-sm-1 pull-right">
-                    <button type="button" className="btn btn-default" onClick={onClose}>
+                    <button type="button" className="btn btn-default" onClick={onCloseTopic}>
                       <em className="fa fa-close fa-fw" />
                     </button>
                   </div>
@@ -82,11 +208,11 @@ export default class ReaderView extends React.PureComponent {
                       <div className="pull-left">
                       </div>
                       <div className="pull-right">
-                        <button type="button" className="btn btn-danger" onClick={onDelete}>
+                        <button type="button" className="btn btn-danger" onClick={onDeleteTopic}>
                           <em className="fa fa-trash fa-fw" />
                           {lucidfish.common.delete}
                         </button>
-                        <button type="button" className="btn btn-primary m-t-10" onClick={onModify}>
+                        <button type="button" className="btn btn-primary m-t-10" onClick={onModifyTopic}>
                           <em className="fa fa-check-square-o fa-fw" />
                           {lucidfish.forum.modify}
                         </button>
