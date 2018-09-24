@@ -94,7 +94,7 @@ export default class ReaderView extends React.PureComponent {
             }
           </div>
           {
-            visibleModifier
+            visibleModifier || !comment.allowEdit
               ? null
               : <div className="col-sm-2 text-right">
                 <button
@@ -172,6 +172,7 @@ export default class ReaderView extends React.PureComponent {
       idx,
       title,
       contents,
+      allowEdit,
       onCloseTopic,
       onDeleteTopic,
       onModifyTopic,
@@ -184,7 +185,7 @@ export default class ReaderView extends React.PureComponent {
               <div className="card-header">
                 <div className="row">
                   <div className="col-sm-11">
-                    <h2>{`${idx} ${title}`}</h2>
+                    <h2>{`${idx || ''} ${title || ''}`}</h2>
                   </div>
                   <div className="col-sm-1 pull-right">
                     <button type="button" className="btn btn-default" onClick={onCloseTopic}>
@@ -197,27 +198,31 @@ export default class ReaderView extends React.PureComponent {
                 <div className="row">
                   <div className="col-12 m-1" style={{ minHeight: '200px' }}>
                     {/*{contents && <div dangerouslySetInnerHTML={{ __html: contents }}/>}*/}
-                    <pre>{contents}</pre>
+                    <pre>{contents || ''}</pre>
                   </div>
                 </div>
               </div>
               <div className="card-footer">
                 <div className="row">
                   <div className="col-12">
-                    <div className="clearfix mb-2">
-                      <div className="pull-left">
-                      </div>
-                      <div className="pull-right">
-                        <button type="button" className="btn btn-danger" onClick={onDeleteTopic}>
-                          <em className="fa fa-trash fa-fw" />
-                          {lucidfish.common.delete}
-                        </button>
-                        <button type="button" className="btn btn-primary m-t-10" onClick={onModifyTopic}>
-                          <em className="fa fa-check-square-o fa-fw" />
-                          {lucidfish.forum.modify}
-                        </button>
-                      </div>
-                    </div>
+                    {
+                      !allowEdit ? null : (
+                        <div className="clearfix mb-2">
+                          <div className="pull-left">
+                          </div>
+                          <div className="pull-right">
+                            <button type="button" className="btn btn-danger" onClick={onDeleteTopic}>
+                              <em className="fa fa-trash fa-fw" />
+                              {lucidfish.common.delete}
+                            </button>
+                            <button type="button" className="btn btn-primary m-t-10" onClick={onModifyTopic}>
+                              <em className="fa fa-check-square-o fa-fw" />
+                              {lucidfish.forum.modify}
+                            </button>
+                          </div>
+                        </div>
+                      )
+                    }
                   </div>
                 </div>
                 <div className="row">

@@ -117,9 +117,15 @@ export default class EasyForum extends React.PureComponent {
   }
 
   closeReader () {
+    const { selectedTopic, onCloseTopic } = this.props
+
     this.setState({
       readerVisible: false,
     })
+
+    if (onCloseTopic) {
+      onCloseTopic(selectedTopic.idx)
+    }
   }
 
   cancelModifying () {
@@ -178,6 +184,7 @@ export default class EasyForum extends React.PureComponent {
             title={selectedTopic.title}
             contents={selectedTopic.contents}
             comments={selectedTopic.comments}
+            allowEdit={selectedTopic.allowEdit}
             onModifyTopic={this.openModifier.bind(this)}
             onCloseTopic={this.closeReader.bind(this)}
             onWriteTopic={this.writeTopic.bind(this)}
