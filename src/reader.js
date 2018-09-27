@@ -184,13 +184,15 @@ export default class ReaderView extends React.PureComponent {
             <div className="card card-default">
               <div className="card-header">
                 <div className="row">
-                  <div className="col-sm-11">
-                    <h2>{`${idx || ''} ${title || ''}`}</h2>
-                  </div>
-                  <div className="col-sm-1 pull-right">
-                    <button type="button" className="btn btn-default" onClick={onCloseTopic}>
-                      <em className="fa fa-close fa-fw" />
-                    </button>
+                  <div className="col-sm-12 d-flex justify-content-between">
+                    <div>
+                      <h2>{`${idx || ''} ${title || ''}`}</h2>
+                    </div>
+                    <div>
+                      <button type="button" className="btn btn-default" onClick={onCloseTopic}>
+                        <em className="fa fa-close fa-fw" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
